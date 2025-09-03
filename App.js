@@ -1,19 +1,6 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import LoginScreen from './screens/Login.js';
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Olá, mundo!</Text>
-    </View>
-  );
+  return <LoginScreen />;
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,               // ocupa a tela toda
-    justifyContent: 'center', // centraliza verticalmente
-    alignItems: 'center',      // centraliza horizontalmente
-    backgroundColor: '#fff',   // fundo branco
-  },
-});
