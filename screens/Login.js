@@ -1,7 +1,30 @@
-import React from 'react';
-import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { validateLogin } from '../services/storage';
 
-export default function LoginScreen() {
+export default function LoginScreen({ onLogin, onSignUp }) {
+  const [login, setLogin] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleLogin = async () => {
+    if (!login.trim() || !password.trim()) {
+      Alert.alert('Erro', 'Por favor, preencha todos os campos');
+      return;
+    }
+
+    setLoading(true);
+    const result = await validateLogin(login.trim(), password);
+    setLoading(false);
+
+    if (result.success) {
+      Alert.alert('Sucesso', `Bem-vindo, ${result.user.name}!`);
+      onLogin();
+    } else {
+      Alert.alert('Erro', result.message);
+    }
+  };
+
   return (
     <View style={styles.container}>
       {/* Logo da aplicação */}
@@ -18,6 +41,9 @@ export default function LoginScreen() {
         style={styles.input}
         placeholder="Login"
         placeholderTextColor="#A9A9A9"
+        value={login}
+        onChangeText={setLogin}
+        autoCapitalize="none"
       />
 
       {/* Campo de entrada para a Senha */}
@@ -26,17 +52,25 @@ export default function LoginScreen() {
         placeholder="Senha"
         placeholderTextColor="#A9A9A9"
         secureTextEntry={true}
+        value={password}
+        onChangeText={setPassword}
       />
 
       {/* Botão de Iniciar Sessão */}
-      <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}>Iniciar Sessão</Text>
+      <TouchableOpacity 
+        style={[styles.button, loading && styles.buttonDisabled]} 
+        onPress={handleLogin}
+        disabled={loading}
+      >
+        <Text style={styles.buttonText}>
+          {loading ? 'Carregando...' : 'Iniciar Sessão'}
+        </Text>
       </TouchableOpacity>
 
       {/* Texto para a tela de cadastro */}
       <View style={styles.signUpContainer}>
         <Text style={styles.signUpText}>Não possui uma conta? </Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={onSignUp}>
           <Text style={styles.signUpLink}>Cadastre-se!</Text>
         </TouchableOpacity>
       </View>
@@ -82,6 +116,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 20,
+  },
+  buttonDisabled: {
+    opacity: 0.6,
   },
   buttonText: {
     fontSize: 18,
