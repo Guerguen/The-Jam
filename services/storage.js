@@ -85,4 +85,85 @@ export const clearAllData = async () => {
   }
 };
 
+// ========== DADOS MOCKADOS DE CANTORES ==========
+const SINGERS_KEY = '@thejam:singers';
+
+// Dados mockados iniciais
+const MOCK_SINGERS = [
+  {
+    id: '1',
+    name: 'John Doe',
+    description: 'Cantor e compositor brasileiro conhecido por suas baladas românticas e performances emocionantes. Com mais de 10 anos de carreira, já lançou 5 álbuns e conquistou milhões de fãs ao redor do mundo.',
+    images: [
+      require('../assets/imagens/logo.png'),
+      require('../assets/imagens/logo.png'),
+      require('../assets/imagens/logo.png'),
+    ],
+    genre: 'Pop/Rock',
+    albums: 5,
+    followers: '2.5M'
+  },
+  {
+    id: '2',
+    name: 'Maria Silva',
+    description: 'Artista versátil que mistura MPB com elementos de jazz e soul. Sua voz única e presença de palco cativante fazem dela uma das principais revelações da música brasileira contemporânea.',
+    images: [
+      require('../assets/imagens/logo.png'),
+      require('../assets/imagens/logo.png'),
+      require('../assets/imagens/logo.png'),
+    ],
+    genre: 'MPB/Jazz',
+    albums: 3,
+    followers: '1.8M'
+  },
+  {
+    id: '3',
+    name: 'Carlos Santos',
+    description: 'Cantor de rock alternativo com influências de indie e folk. Suas letras profundas e melodias cativantes conquistaram uma base de fãs dedicada. Já tocou nos principais festivais do país.',
+    images: [
+      require('../assets/imagens/logo.png'),
+      require('../assets/imagens/logo.png'),
+    ],
+    genre: 'Rock Alternativo',
+    albums: 4,
+    followers: '950K'
+  }
+];
+
+// Inicializar cantores mockados (chamar uma vez)
+export const initializeSingers = async () => {
+  try {
+    const existing = await AsyncStorage.getItem(SINGERS_KEY);
+    if (!existing) {
+      await AsyncStorage.setItem(SINGERS_KEY, JSON.stringify(MOCK_SINGERS));
+    }
+  } catch (error) {
+    console.error('Erro ao inicializar cantores:', error);
+  }
+};
+
+// Buscar todos os cantores
+export const getSingers = async () => {
+  try {
+    await initializeSingers(); // Garante que os dados existem
+    const singersJson = await AsyncStorage.getItem(SINGERS_KEY);
+    return singersJson ? JSON.parse(singersJson) : MOCK_SINGERS;
+  } catch (error) {
+    return MOCK_SINGERS; // Retorna mock se houver erro
+  }
+};
+
+// Buscar cantor por ID
+export const getSingerById = async (id) => {
+  try {
+    const singers = await getSingers();
+    return singers.find(singer => singer.id === id) || null;
+  } catch (error) {
+    return null;
+  }
+};
+
+
+
+
 

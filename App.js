@@ -3,10 +3,13 @@ import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import LoginScreen from './screens/Login';
 import SignUpScreen from './screens/SignUp';
 import HomeScreen from './screens/Home';
+import SingersListScreen from './screens/SingersList';
+import SingerScreen from './screens/Singer';
 import { getCurrentUser } from './services/storage';
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState('login');
+  const [selectedSingerId, setSelectedSingerId] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -29,15 +32,51 @@ export default function App() {
     );
   }
 
+  if (currentScreen === 'singer' && selectedSingerId) {
+    return (
+      <SingerScreen 
+        singerId={selectedSingerId} 
+        onBack={() => setCurrentScreen('singers')} 
+      />
+    );
+  }
+
+  if (currentScreen === 'singers') {
+    return (
+      <SingersListScreen 
+        onSelectSinger={(id) => {
+          setSelectedSingerId(id);
+          setCurrentScreen('singer');
+        }}
+        onBack={() => setCurrentScreen('home')} 
+      />
+    );
+  }
+
   if (currentScreen === 'home') {
-    return <HomeScreen onLogout={() => setCurrentScreen('login')} />;
+    return (
+      <HomeScreen 
+        onLogout={() => setCurrentScreen('login')} 
+        onViewSingers={() => setCurrentScreen('singers')}
+      />
+    );
   }
 
   if (currentScreen === 'signup') {
-    return <SignUpScreen onBack={() => setCurrentScreen('login')} onSuccess={() => setCurrentScreen('login')} />;
+    return (
+      <SignUpScreen 
+        onBack={() => setCurrentScreen('login')} 
+        onSuccess={() => setCurrentScreen('login')} 
+      />
+    );
   }
 
-  return <LoginScreen onLogin={() => setCurrentScreen('home')} onSignUp={() => setCurrentScreen('signup')} />;
+  return (
+    <LoginScreen 
+      onLogin={() => setCurrentScreen('home')} 
+      onSignUp={() => setCurrentScreen('signup')} 
+    />
+  );
 }
 
 const styles = StyleSheet.create({

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Alert } from 'react-native';
 import { getCurrentUser, logout } from '../services/storage';
 
-export default function HomeScreen({ onLogout }) {
+export default function HomeScreen({ onLogout, onViewSingers }) {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -42,6 +42,11 @@ export default function HomeScreen({ onLogout }) {
       <Text style={styles.userName}>{user.name}</Text>
       <Text style={styles.userInfo}>Login: {user.login}</Text>
       
+      {/* Botão para ver cantores */}
+      <TouchableOpacity style={styles.singersButton} onPress={onViewSingers}>
+        <Text style={styles.singersButtonText}>Ver Cantores</Text>
+      </TouchableOpacity>
+      
       <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
         <Text style={styles.logoutButtonText}>Sair</Text>
       </TouchableOpacity>
@@ -73,6 +78,20 @@ const styles = StyleSheet.create({
     color: '#A0AEC0',
     marginBottom: 40,
   },
+  singersButton: {
+    width: '100%',
+    height: 50,
+    backgroundColor: '#27B062',
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 15,
+  },
+  singersButtonText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#2D3748',
+  },
   logoutButton: {
     width: '100%',
     height: 50,
@@ -88,5 +107,8 @@ const styles = StyleSheet.create({
     color: '#E2E8F0',
   },
 });
+
+
+
 
 
